@@ -67,7 +67,7 @@ public abstract class Configuration extends ElementArchitecturale implements Obs
 
 	public void addElement(ElementArchitecturale e) {
 		e.setParent(this);
-		if (e instanceof  Connecteur) {
+		if (e instanceof Connecteur) {
 			for (InterfaceCnt i : ((Connecteur) e).getInterfaceCnts())
 				i.addObserver(this);
 		} else if (e instanceof Composant) {
@@ -80,7 +80,7 @@ public abstract class Configuration extends ElementArchitecturale implements Obs
 		elements.add(e);
 	}
 
-	public void addBinding(InterfaceCpt sendResponse, InterfaceCfg receiveReqConf) {
+	public void addBinding(InterfaceCpt cpt, InterfaceCfg cfg) {
 		/*
 		 * Binding b = null; switch (type) { case "fourni": b = new
 		 * BindingFourni((PortCptFourni) cmp, (PortCfgFourni) cnf,
@@ -91,9 +91,12 @@ public abstract class Configuration extends ElementArchitecturale implements Obs
 		 * (PortCptRequis) cmp, cnf.getParent().getName() + " --> " +
 		 * cmp.getParent().getName()); break; }
 		 */
-		
-		Binding b = new Binding(sendResponse,receiveReqConf); 
+
+		Binding b = new Binding(cpt, cfg);
 		this.bindings.add(b);
+		cpt.addObserver(this);
+		cfg.addObserver(this);
+		
 	}
 
 	public void addAttachement(InterfaceCpt sendRequest, InterfaceCnt caller) {
@@ -102,44 +105,50 @@ public abstract class Configuration extends ElementArchitecturale implements Obs
 
 	@Override
 	public void update(Observable o, Object arg) {
-		System.out.println(o.getClass().getName()+" lance update");
-		
+//		System.out.println(o.gCetClass().getName() + " lance update");
+
 		Message m = (Message) arg;
 		boolean sent = false;
 		for (Attachement a : attachements) {
 			if (a.getPortCpt() == o) {
 				a.getRoleCnt().sendMessage(this, m);
-				sent = true;
+				return;
+				// sent = true;
+				// break;
 			} else if (a.getRoleCnt() == o) {
 				a.getPortCpt().sendMessage(this, m);
-				sent = true;
-			}
-			break;
-		}
-		if (!sent) {
-			// c'est un message à envoyé vers l'extérieur donc à travers un
-			// binding
-			for (Binding b : bindings) {
-				if (b.getPortCfg() == o) {
-					// on va envoyé la réponse au composant en dehors de cette
-					// config
-					 b.getPortCpt().sendMessage(this, m);
-					sent = true;
-				} else {
-					b.getPortCfg().sendMessage(this, m);
-					sent = true;
-				}
+				return;
+				// sent = true;
+				// break;
 			}
 		}
-		if (!sent) {
-			System.err.println("Il y'a une erreur dans les liaisons");
-			System.out.println( "\n-------------------trace du message----------------------" + "\n" + m.getTrace());
+		// if (!sent) {
+		// c'est un message à envoyé vers l'extérieur donc à travers un
+		// binding
+		for (Binding b : bindings) {
+			if (b.getPortCfg() == o) {
+				// on va envoyé la réponse au composant en dehors de cette
+				// config
+				b.getPortCpt().sendMessage(this, m);
+				// sent = true;
+				return;
+			} else if (b.getPortCpt() == o) {
+				b.getPortCfg().sendMessage(this, m);
+				// sent = true;
+				return;
+			}
 		}
+		// }
+		// if (!sent) {
+//		System.err.println("Il y'a une erreur dans les liaisons");
+//		System.out.println("\n-------------------trace du message----------------------" + "\n" + m.getTrace());
+//		System.out.println("\n-------------------log du message----------------------" + "\n" + m.getLog());
+		// }
 	}
 
 	public abstract void sendMessage(Object sender, Message m);
 
 	public void addBinding(InterfaceCpt sendResponse, InterfaceCpt externalSocket) {
-				
+
 	}
 }

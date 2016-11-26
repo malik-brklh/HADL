@@ -32,7 +32,7 @@ public abstract class InterfaceCnt extends Observable{
 	}
 	
 	public void sendMessage(ElementArchitecturale sender, Message m){
-		m.addTrace("Passage par "+getName());
+		m.addTrace("Passage par "+getParent().getName()+" - "+getName());
 		if(sender == getParent()){
 			setChanged();
 			notifyObservers(m);

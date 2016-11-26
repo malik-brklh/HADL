@@ -13,7 +13,6 @@ public class ServeurDetail extends Configuration {
 	@Override
 	public void sendMessage(Object sender, Message m) {
 		m.addTrace("Passage par " + this.getName());
-//		((InterfaceCpt)sender).sendMessage(this, m);		
 		if (sender.getClass() == ReceiveRequest.class) {
 			for (InterfaceCfg i : getInterfaceCfgs()) {
 				if (i.getClass() == SendResponse.class) {

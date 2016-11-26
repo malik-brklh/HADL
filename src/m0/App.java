@@ -73,17 +73,17 @@ public class App {
 		Connecteur sqlRequest = new Connecteur("SQL Request", null);
 		InterfaceCnt calledSql = new Called();
 		InterfaceCnt callerSql = new Caller();
-		rpc.addGlue(calledSql, callerSql);
+		sqlRequest.addGlue(calledSql, callerSql);
 
 		Connecteur secAuth = new Connecteur("Security Auth Check", null);
 		InterfaceCnt calledSec = new Called();
 		InterfaceCnt callerSec = new Caller();
-		rpc.addGlue(calledSec, callerSec);
+		secAuth.addGlue(calledSec, callerSec);
 
 		Connecteur dbSecCheck = new Connecteur("Security DB Check", null);
 		InterfaceCnt calledDbSec = new Called();
 		InterfaceCnt callerDbSec = new Caller();
-		rpc.addGlue(calledDbSec, callerDbSec);
+		dbSecCheck.addGlue(calledDbSec, callerDbSec);
 
 		// definition des configuration
 		Configuration serveurDetail = new ServeurDetail("Serveur Detail");
@@ -96,6 +96,8 @@ public class App {
 		serveurDetail.addElement(dbSecCheck);
 		serveurDetail.addElement(secAuth);
 		serveurDetail.addElement(sqlRequest);
+		serveurDetail.addInterface(receiveReqConf);
+		serveurDetail.addInterface(sendRespConf);
 		//ajout des attachement et bindings
 		serveurDetail.addAttachement(securityCheck, callerSec);
 		serveurDetail.addAttachement(authQuery, calledSec);
@@ -120,9 +122,12 @@ public class App {
 		systemeClientServeur.addAttachement(sendRequest, callerRpc);
 		systemeClientServeur.addAttachement(receiveRequest, calledRpc);
 		
-		systemeClientServeur.addBinding(receiveResponse,portPrincipale);
 		systemeClientServeur.addBinding(sendResponse,receiveReqConf);
+		systemeClientServeur.addBinding(receiveResponse,portPrincipale);
 		systemeClientServeur.addBinding(externalSocket,sendRespConf);
+	//	serveurDetail.addBinding(externalSocket,sendRespConf);
+		
+	//	serveurDetail.addBinding(externalSocket,receiveReqConf);
 		
 		
 		portPrincipale.sendMessage(systemeClientServeur, new Message("alma2016","hadl"));

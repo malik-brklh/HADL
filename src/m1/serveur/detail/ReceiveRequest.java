@@ -9,10 +9,6 @@ public class ReceiveRequest extends PortCfgRequis {
 	public ReceiveRequest() {
 		super("ReceiveRequest");
 	}
-	
-	@Override
-	public void sendMessage(ElementArchitecturale sender, Message m) {
-		
-	}
+
 
 }

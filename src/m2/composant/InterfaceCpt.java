@@ -40,7 +40,7 @@ public abstract class InterfaceCpt extends Observable {
 	 * ou s'il doit notifier les observateur
 	 */
 	public void sendMessage(ElementArchitecturale sender, Message m){
-		m.addTrace("Passage par "+this.getName());
+		m.addTrace("Passage par "+getParent().getName()+" - "+this.getName());
 		if(sender == getParent()){
 			this.setChanged();
 			this.notifyObservers(m);

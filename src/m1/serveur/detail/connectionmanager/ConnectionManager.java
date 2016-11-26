@@ -1,8 +1,5 @@
 package m1.serveur.detail.connectionmanager;
 
-import m1.client.ReceiveResponse;
-import m1.client.SendRequest;
-import m2.ElementArchitecturale;
 import m2.Message;
 import m2.composant.Composant;
 import m2.composant.InterfaceCpt;
@@ -30,7 +27,7 @@ public class ConnectionManager extends Composant {
 			// si l'utilisateur est bien authentifié, envoyé le message vers la
 			// BD
 			if (m.isAuth()) {
-				m.addLog("Bien authentifié... ");
+				m.addLog("Bien authentifié. ");
 				for (InterfaceCpt i : getInterfaceCpts()) {
 					if (i.getClass() == DbQuery.class) {
 						i.sendMessage(this, m);
@@ -39,7 +36,12 @@ public class ConnectionManager extends Composant {
 				}
 			} else { // l'utilisateur n'est pas authentifié
 				m.addLog("Authentification échoué... ");
-				((ExternalSocket) sender).sendMessage(this, m);
+				for (InterfaceCpt i : getInterfaceCpts()) {
+					if (i.getClass() == ExternalSocket.class) {
+						i.sendMessage(this, m);
+						break;
+					}
+				}
 			}
 		} else if (sender.getClass() == DbQuery.class) {
 			for (InterfaceCpt i : getInterfaceCpts()) {

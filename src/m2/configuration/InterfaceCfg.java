@@ -34,17 +34,7 @@ public abstract class InterfaceCfg  extends Observable{
 	}
 	
 	public void sendMessage(ElementArchitecturale sender, Message m){
-		if (sender == null){
-			sender = new Composant("", null) {
-				
-				@Override
-				public void sendMessage(Object sender, Message m) {
-					// TODO Auto-generated method stub
-					
-				}
-			};
-		};
-		m.addTrace("Passage par "+this.getName());
+		m.addTrace("Passage par "+getParent().getName()+" - "+this.getName());
 		if (countObservers()==0)
 			addObserver(getParent());
 

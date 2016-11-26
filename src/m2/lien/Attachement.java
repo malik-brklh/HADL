@@ -7,8 +7,8 @@ import m2.connecteur.RoleCnt;
 
 public class Attachement {
 
-	private PortCpt portCpt;
-	private RoleCnt roleCnt;
+	private InterfaceCpt portCpt;
+	private InterfaceCnt roleCnt;
 	
 	
 	public Attachement(InterfaceCpt sendRequest, InterfaceCnt caller) {
@@ -17,16 +17,16 @@ public class Attachement {
 		this.roleCnt = (RoleCnt) caller;
 		
 	}
-	public PortCpt getPortCpt() {
+	public InterfaceCpt getPortCpt() {
 		return portCpt;
 	}
-	public void setPortCpt(PortCpt portCpt) {
+	public void setPortCpt(InterfaceCpt portCpt) {
 		this.portCpt = portCpt;
 	}
-	public RoleCnt getRoleCnt() {
+	public InterfaceCnt getRoleCnt() {
 		return roleCnt;
 	}
-	public void setRoleCnt(RoleCnt roleCnt) {
+	public void InterfaceCnt(RoleCnt roleCnt) {
 		this.roleCnt = roleCnt;
 	}
 }
