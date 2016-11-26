@@ -1,10 +1,13 @@
 package m2.configuration;
 
-public class ConnectCongif extends Configuration {
+import m2.ElementArchitecturale;
 
-	public ConnectCongif(String name) {
-		super(name);
+public abstract class ConnectCongif extends Configuration {
+
+	public ConnectCongif(String name, ElementArchitecturale parent) {
+		super(name, parent);
 		// TODO Auto-generated constructor stub
 	}
+
 
 }

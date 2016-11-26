@@ -1,11 +1,10 @@
 package m2.composant;
 
-public class ServiceCptRequis extends ServiceCpt {
+public abstract class ServiceCptRequis extends ServiceCpt {
 
-	public ServiceCptRequis(String nom) {
-		super(nom);
+	public ServiceCptRequis(String name, Composant parent) {
+		super(name, parent);
 		// TODO Auto-generated constructor stub
 	}
-
 
 }

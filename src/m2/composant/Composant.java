@@ -4,21 +4,30 @@ import java.util.ArrayList;
 
 import m2.ElementArchitecturale;
 
-public class Composant extends ElementArchitecturale{
+public abstract class Composant extends ElementArchitecturale  {
 
-	private ArrayList<InterfaceCpt> interfaceCpt;
-	
-	public Composant(String name) {
-		super(name);
+	public Composant(String name, ElementArchitecturale parent) {
+		super(name, parent);
+		setInterfaceCpts(new ArrayList<InterfaceCpt>());
+		
 	}
 
-	public ArrayList<InterfaceCpt> getInterfaceCpt() {
-		return interfaceCpt;
+
+	private ArrayList<InterfaceCpt> interfaceCpts;
+	
+
+	public ArrayList<InterfaceCpt> getInterfaceCpts() {
+		return interfaceCpts;
 	}
 
-	public void setInterfaceCpt(ArrayList<InterfaceCpt> interfaceCpt) {
-		this.interfaceCpt = interfaceCpt;
+	public void setInterfaceCpts(ArrayList<InterfaceCpt> interfaceCpts) {
+		this.interfaceCpts = interfaceCpts;
 	}
-	
-	
+
+
+	public void addInterface(InterfaceCpt i){
+		i.setParent(this);
+		getInterfaceCpts().add(i);
+	}
+	//public abstract void sendMessage (InterfaceCpt sender, Message m);
 }

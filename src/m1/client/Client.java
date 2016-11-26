@@ -1,18 +1,33 @@
 package m1.client;
 
-import java.util.ArrayList;
-
-import M2.Composant.Composant;
-import M2.Composant.InterfaceCpt;
+import m2.Message;
+import m2.composant.Composant;
+import m2.composant.InterfaceCpt;
 
 public class Client extends Composant {
-	private ArrayList<ReceiveResponse> prtReceiveRes;
-	private ArrayList<SendRequest> prtSendReq;
-	
-	public Client(String nom, String nom2, ArrayList<InterfaceCpt> interfaceCpt) {
-		super(nom, nom2, interfaceCpt);
-		// TODO Auto-generated constructor stub
-		
+
+	public Client(String name) {
+		super(name, null);
+	}
+
+	@Override
+	public void sendMessage(Object sender, Message m) {
+		m.addTrace("Passage par " + this.getName());
+		if (sender.getClass() == SendRequest.class) {
+			for (InterfaceCpt i : getInterfaceCpts()) {
+				if (i.getClass() == ReceiveResponse.class) {
+					i.sendMessage(this, m);
+					break;
+				}
+			}
+		} else if (sender.getClass() == ReceiveResponse.class) {
+			for (InterfaceCpt i : getInterfaceCpts()) {
+				if (i.getClass() == SendRequest.class) {
+					i.sendMessage(this, m);
+					break;
+				}
+			}
+		}
 	}
 
 }

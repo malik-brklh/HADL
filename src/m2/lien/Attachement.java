@@ -1,20 +1,21 @@
 package m2.lien;
 
+import m2.composant.InterfaceCpt;
 import m2.composant.PortCpt;
+import m2.connecteur.InterfaceCnt;
 import m2.connecteur.RoleCnt;
 
 public class Attachement {
 
 	private PortCpt portCpt;
 	private RoleCnt roleCnt;
-	private String name;
 	
 	
-	public Attachement(PortCpt portCpt, RoleCnt roleCnt, String name) {
+	public Attachement(InterfaceCpt sendRequest, InterfaceCnt caller) {
 		super();
-		this.portCpt = portCpt;
-		this.roleCnt = roleCnt;
-		this.name = name;
+		this.portCpt = (PortCpt) sendRequest;
+		this.roleCnt = (RoleCnt) caller;
+		
 	}
 	public PortCpt getPortCpt() {
 		return portCpt;
@@ -27,11 +28,5 @@ public class Attachement {
 	}
 	public void setRoleCnt(RoleCnt roleCnt) {
 		this.roleCnt = roleCnt;
-	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
 	}
 }

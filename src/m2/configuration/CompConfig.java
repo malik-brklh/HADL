@@ -1,10 +1,13 @@
 package m2.configuration;
 
-public class CompConfig extends Configuration {
+import m2.ElementArchitecturale;
 
-	public CompConfig(String name) {
-		super(name);
+public abstract class CompConfig extends Configuration {
+
+	public CompConfig(String name, ElementArchitecturale parent) {
+		super(name, parent);
 		// TODO Auto-generated constructor stub
 	}
+
 
 }

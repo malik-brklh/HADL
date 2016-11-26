@@ -1,21 +1,22 @@
 package m2.lien;
 
+import m2.composant.PortCpt;
 import m2.composant.PortCptFourni;
+import m2.configuration.PortCfg;
 import m2.configuration.PortCfgFourni;
 
 public class BindingFourni extends Binding {
+	public BindingFourni(PortCpt portCpt, PortCfg portCfg) {
+		super(portCpt, portCfg);
+		// TODO Auto-generated constructor stub
+	}
 	private PortCptFourni portCptFourni;
 	private PortCfgFourni portCfgFourni;
 	private String name;
 	
 	
 	
-	public BindingFourni(PortCptFourni portCptFourni, PortCfgFourni portCfgFourni, String name) {
-		super();
-		this.portCptFourni = portCptFourni;
-		this.portCfgFourni = portCfgFourni;
-		this.name = name;
-	}
+
 	public PortCptFourni getPortCptFourni() {
 		return portCptFourni;
 	}

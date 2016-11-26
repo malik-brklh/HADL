@@ -1,17 +1,28 @@
 package m1.client;
 
-import java.util.ArrayList;
+import m2.ElementArchitecturale;
+import m2.Message;
+import m2.composant.Composant;
+import m2.composant.PortCptRequis;
 
-import M2.Configuration.PortCfg;
-import M2.Configuration.PortCfgRequis;
-import M2.Lien.Binding;
+public class ReceiveResponse extends PortCptRequis {
 
-public class ReceiveResponse  extends PortCfgRequis {
 
-	public ReceiveResponse(ArrayList<PortCfg> portConfig, String nom, Binding binding) {
-		super(portConfig, nom, binding);
-		// TODO Auto-generated constructor stub
+	public ReceiveResponse() {
+		super("ReceiveResponse", null);
 	}
 
-	
+//	@Override
+//	public void sendMessage(ElementArchitecturale sender, Message m) {
+//		if (sender!=getParent()){
+//			m.addTrace("Passage par "+this.getName());
+//			getParent().sendMessage(this,m);	
+//		}else{
+//			setChanged();
+//			notifyObservers(m);
+//		}
+//		
+//		
+//	}
+
 }

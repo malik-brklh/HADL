@@ -1,9 +1,9 @@
 package m2.composant;
 
-public class PortCptRequis extends PortCpt {
+public abstract class PortCptRequis extends PortCpt {
 
-	public PortCptRequis(String nom) {
-		super(nom);
+	public PortCptRequis(String name, Composant parent) {
+		super(name, parent);
 		// TODO Auto-generated constructor stub
 	}
 	

@@ -1,12 +1,10 @@
 package m2.composant;
 
-public class ServiceCpt extends InterfaceCpt {
+public abstract class ServiceCpt extends InterfaceCpt {
 
-	public ServiceCpt(String nom) {
-		super(nom);
+	public ServiceCpt(String name, Composant parent) {
+		super(name, parent);
 		// TODO Auto-generated constructor stub
 	}
-
-	
 
 }

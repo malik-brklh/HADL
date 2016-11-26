@@ -1,23 +1,17 @@
 package m2.connecteur;
 
+import m2.ElementArchitecturale;
+
 public class Glue {
 
-    private String name;
     private RoleCntFourni roleCntFournis;
     private RoleCntRequis roleCntRequis;
-
-    public Glue(String name, RoleCntFourni roleCntFournis, RoleCntRequis roleCntRequises) {
-        this.name = name;
-        this.setRoleCntFournis(roleCntFournis);
-        this.setRoleCntRequis(roleCntRequises);
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    private ElementArchitecturale parent;
+    
+    public Glue(ElementArchitecturale parent, InterfaceCnt called, InterfaceCnt caller) {
+        this.setRoleCntFournis((RoleCntFourni) called);
+        this.setRoleCntRequis((RoleCntRequis) caller);
+        this.setParent(parent);
     }
 
 	public RoleCntRequis getRoleCntRequis() {
@@ -36,5 +30,17 @@ public class Glue {
 		this.roleCntFournis = roleCntFournis;
 	}
 
+//	public void sendMessage(Object sender, Message m){
+//		
+//	}
+
+	public ElementArchitecturale getParent() {
+		return parent;
+	}
+
+	public void setParent(ElementArchitecturale parent) {
+		this.parent = parent;
+	}
   
+	
 }

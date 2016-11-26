@@ -1,45 +1,52 @@
 package m2.configuration;
 
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 
 import m2.ElementArchitecturale;
+import m2.Message;
 import m2.composant.Composant;
-import m2.composant.PortCpt;
+import m2.composant.InterfaceCpt;
 import m2.connecteur.Connecteur;
-import m2.connecteur.RoleCnt;
+import m2.connecteur.InterfaceCnt;
 import m2.lien.Attachement;
 import m2.lien.Binding;
 
-public class Configuration extends ElementArchitecturale{
-	
+public abstract class Configuration extends ElementArchitecturale implements Observer {
 
-	private ArrayList<Composant> composants;
-	private ArrayList<Connecteur> connecteurs;
+	private ArrayList<InterfaceCfg> interfaceCfgs;
+	private ArrayList<ElementArchitecturale> elements;
 	private ArrayList<Binding> bindings;
 	private ArrayList<Attachement> attachements;
-	
-	public Configuration(String name) {
-		super(name);
+
+	public Configuration(String name, ElementArchitecturale parent) {
+		super(name, parent);
+		setInterfaceCfgs(new ArrayList<InterfaceCfg>());
 		setAttachements(new ArrayList<Attachement>());
 		setBindings(new ArrayList<Binding>());
-		setComposants(new ArrayList<Composant>());
-		setConnecteurs(new ArrayList<Connecteur>());
+		setElements(new ArrayList<ElementArchitecturale>());
 	}
 
-	public ArrayList<Composant> getComposants() {
-		return composants;
+	public void addInterface(InterfaceCfg i) {
+		i.setParent(this);
+		this.interfaceCfgs.add(i);
 	}
 
-	public void setComposants(ArrayList<Composant> composants) {
-		this.composants = composants;
+	public ArrayList<InterfaceCfg> getInterfaceCfgs() {
+		return interfaceCfgs;
 	}
 
-	public ArrayList<Connecteur> getConnecteurs() {
-		return connecteurs;
+	public void setInterfaceCfgs(ArrayList<InterfaceCfg> interfaceCfgs) {
+		this.interfaceCfgs = interfaceCfgs;
 	}
 
-	public void setConnecteurs(ArrayList<Connecteur> connecteurs) {
-		this.connecteurs = connecteurs;
+	public ArrayList<ElementArchitecturale> getElements() {
+		return elements;
+	}
+
+	public void setElements(ArrayList<ElementArchitecturale> elements) {
+		this.elements = elements;
 	}
 
 	public ArrayList<Binding> getBindings() {
@@ -57,26 +64,82 @@ public class Configuration extends ElementArchitecturale{
 	public void setAttachements(ArrayList<Attachement> attachements) {
 		this.attachements = attachements;
 	}
-	
-	public void addComposant(Composant c){
-		this.composants.add(c);
+
+	public void addElement(ElementArchitecturale e) {
+		e.setParent(this);
+		if (e instanceof  Connecteur) {
+			for (InterfaceCnt i : ((Connecteur) e).getInterfaceCnts())
+				i.addObserver(this);
+		} else if (e instanceof Composant) {
+			for (InterfaceCpt i : ((Composant) e).getInterfaceCpts())
+				i.addObserver(this);
+		} else if (e instanceof Configuration) {
+			for (InterfaceCfg i : ((Configuration) e).getInterfaceCfgs())
+				i.addObserver(this);
+		}
+		elements.add(e);
 	}
-	
-	public void addConnecteur(Connecteur c){
-		this.connecteurs.add(c);
-	}
-	
-	public void addBinding(){
+
+	public void addBinding(InterfaceCpt sendResponse, InterfaceCfg receiveReqConf) {
+		/*
+		 * Binding b = null; switch (type) { case "fourni": b = new
+		 * BindingFourni((PortCptFourni) cmp, (PortCfgFourni) cnf,
+		 * cmp.getParent().getName() + " --> " + cnf.getParent().getName());
+		 * break;
+		 * 
+		 * case "requis": b = new BindingRequis((PortCfgRequis) cnf,
+		 * (PortCptRequis) cmp, cnf.getParent().getName() + " --> " +
+		 * cmp.getParent().getName()); break; }
+		 */
+		
+		Binding b = new Binding(sendResponse,receiveReqConf); 
 		this.bindings.add(b);
 	}
-//	
-//	public void addAttachement(Attachement a, ){
-//		this.attachements.add(a);
-//	}
-	
-	public void addAttachement(PortCpt comp, RoleCnt con,String nom){
-		
-		this.attachements.add(new Attachement(comp, con,nom));
+
+	public void addAttachement(InterfaceCpt sendRequest, InterfaceCnt caller) {
+		this.attachements.add(new Attachement(sendRequest, caller));
 	}
-	
+
+	@Override
+	public void update(Observable o, Object arg) {
+		System.out.println(o.getClass().getName()+" lance update");
+		
+		Message m = (Message) arg;
+		boolean sent = false;
+		for (Attachement a : attachements) {
+			if (a.getPortCpt() == o) {
+				a.getRoleCnt().sendMessage(this, m);
+				sent = true;
+			} else if (a.getRoleCnt() == o) {
+				a.getPortCpt().sendMessage(this, m);
+				sent = true;
+			}
+			break;
+		}
+		if (!sent) {
+			// c'est un message à envoyé vers l'extérieur donc à travers un
+			// binding
+			for (Binding b : bindings) {
+				if (b.getPortCfg() == o) {
+					// on va envoyé la réponse au composant en dehors de cette
+					// config
+					 b.getPortCpt().sendMessage(this, m);
+					sent = true;
+				} else {
+					b.getPortCfg().sendMessage(this, m);
+					sent = true;
+				}
+			}
+		}
+		if (!sent) {
+			System.err.println("Il y'a une erreur dans les liaisons");
+			System.out.println( "\n-------------------trace du message----------------------" + "\n" + m.getTrace());
+		}
+	}
+
+	public abstract void sendMessage(Object sender, Message m);
+
+	public void addBinding(InterfaceCpt sendResponse, InterfaceCpt externalSocket) {
+				
+	}
 }

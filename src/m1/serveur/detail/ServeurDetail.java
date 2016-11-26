@@ -1,34 +1,34 @@
-package m1.serveur;
+package m1.serveur.detail;
 
 import m2.Message;
-import m2.composant.Composant;
-import m2.composant.InterfaceCpt;
+import m2.configuration.Configuration;
+import m2.configuration.InterfaceCfg;
 
-public class Serveur extends Composant {
+public class ServeurDetail extends Configuration {
 
-	public Serveur(String name) {
+	public ServeurDetail(String name) {
 		super(name, null);
 	}
-
+	
 	@Override
 	public void sendMessage(Object sender, Message m) {
 		m.addTrace("Passage par " + this.getName());
+//		((InterfaceCpt)sender).sendMessage(this, m);		
 		if (sender.getClass() == ReceiveRequest.class) {
-			for (InterfaceCpt i : getInterfaceCpts()) {
+			for (InterfaceCfg i : getInterfaceCfgs()) {
 				if (i.getClass() == SendResponse.class) {
 					i.sendMessage(this, m);
 					break;
 				}
 			}
 		} else if (sender.getClass() == SendResponse.class) {
-			for (InterfaceCpt i : getInterfaceCpts()) {
+			for (InterfaceCfg i : getInterfaceCfgs()) {
 				if (i.getClass() == ReceiveRequest.class) {
 					i.sendMessage(this, m);
 					break;
 				}
 			}
 		}
-
 	}
 
 }

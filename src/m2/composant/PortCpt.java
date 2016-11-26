@@ -1,11 +1,12 @@
 package m2.composant;
 
-public class PortCpt extends InterfaceCpt {
+public abstract class PortCpt extends InterfaceCpt {
 
-	public PortCpt(String nom) {
-		super(nom);
+	public PortCpt(String name, Composant parent) {
+		super(name, parent);
 		// TODO Auto-generated constructor stub
 	}
+
 
 
 }
