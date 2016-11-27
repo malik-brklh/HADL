@@ -13,9 +13,9 @@ public class ConnectionManager extends Composant {
 	@Override
 	public void sendMessage(Object sender, Message m) {
 		m.addTrace("Passage par " + this.getName());
-		m.addLog("Authentification... ");
 		// requise
 		if (sender.getClass() == ExternalSocket.class) {
+			m.addLog("Going to Authentification... ");
 			for (InterfaceCpt i : getInterfaceCpts()) {
 				if (i.getClass() == SecurityCheck.class) {
 					i.sendMessage(this, m);

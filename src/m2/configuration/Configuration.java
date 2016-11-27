@@ -65,6 +65,9 @@ public abstract class Configuration extends ElementArchitecturale implements Obs
 		this.attachements = attachements;
 	}
 
+	/*
+	 * pour que la configuration observe les msg de ses éléments, elle observe leurs ports ou roles (s'ajoute à leurs liste d'observateur 
+	 */
 	public void addElement(ElementArchitecturale e) {
 		e.setParent(this);
 		if (e instanceof Connecteur) {
@@ -81,48 +84,32 @@ public abstract class Configuration extends ElementArchitecturale implements Obs
 	}
 
 	public void addBinding(InterfaceCpt cpt, InterfaceCfg cfg) {
-		/*
-		 * Binding b = null; switch (type) { case "fourni": b = new
-		 * BindingFourni((PortCptFourni) cmp, (PortCfgFourni) cnf,
-		 * cmp.getParent().getName() + " --> " + cnf.getParent().getName());
-		 * break;
-		 * 
-		 * case "requis": b = new BindingRequis((PortCfgRequis) cnf,
-		 * (PortCptRequis) cmp, cnf.getParent().getName() + " --> " +
-		 * cmp.getParent().getName()); break; }
-		 */
-
 		Binding b = new Binding(cpt, cfg);
 		this.bindings.add(b);
 		cpt.addObserver(this);
 		cfg.addObserver(this);
-		
+
 	}
 
 	public void addAttachement(InterfaceCpt sendRequest, InterfaceCnt caller) {
 		this.attachements.add(new Attachement(sendRequest, caller));
 	}
 
+	/*
+	 * 
+	 */
 	@Override
 	public void update(Observable o, Object arg) {
-//		System.out.println(o.gCetClass().getName() + " lance update");
-
 		Message m = (Message) arg;
-		boolean sent = false;
 		for (Attachement a : attachements) {
 			if (a.getPortCpt() == o) {
 				a.getRoleCnt().sendMessage(this, m);
 				return;
-				// sent = true;
-				// break;
 			} else if (a.getRoleCnt() == o) {
 				a.getPortCpt().sendMessage(this, m);
 				return;
-				// sent = true;
-				// break;
 			}
 		}
-		// if (!sent) {
 		// c'est un message à envoyé vers l'extérieur donc à travers un
 		// binding
 		for (Binding b : bindings) {
@@ -138,17 +125,8 @@ public abstract class Configuration extends ElementArchitecturale implements Obs
 				return;
 			}
 		}
-		// }
-		// if (!sent) {
-//		System.err.println("Il y'a une erreur dans les liaisons");
-//		System.out.println("\n-------------------trace du message----------------------" + "\n" + m.getTrace());
-//		System.out.println("\n-------------------log du message----------------------" + "\n" + m.getLog());
-		// }
 	}
 
 	public abstract void sendMessage(Object sender, Message m);
 
-	public void addBinding(InterfaceCpt sendResponse, InterfaceCpt externalSocket) {
-
-	}
 }

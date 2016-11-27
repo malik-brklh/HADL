@@ -2,11 +2,11 @@ package m2;
 
 public class Message {
 
-	private String value;
-	private String trace="";
 	private String userName;
 	private String passwd;
 	private boolean auth = false;
+	private String value;
+	private String trace="";
 	private String log="";
 	
 	

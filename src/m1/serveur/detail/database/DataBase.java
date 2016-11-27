@@ -25,7 +25,7 @@ public class DataBase extends Composant {
 		// on doit s'assurer que les donnée de l'utilisateur sont correcte et ne
 		// sont pas falcifié
 		if (sender.getClass() == QueryManager.class) {
-			m.addLog("test authentification... ");
+			m.addLog("test authentification dans db... ");
 			for (InterfaceCpt i : getInterfaceCpts()) {
 				if (i.getClass() == SecurityDbCheck.class) {
 					i.sendMessage(this, m);
@@ -35,7 +35,7 @@ public class DataBase extends Composant {
 			// fournies
 		} else if (sender.getClass() == SecurityDbCheck.class) {
 			if (m.isAuth()) {
-				m.addLog("test authentification validé. ");
+				m.addLog("test authentification validé dans db. ");
 				traitement(m);
 				for (InterfaceCpt i : getInterfaceCpts()) {
 					if (i.getClass() == QueryManager.class) {
